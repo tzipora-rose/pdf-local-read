@@ -18,8 +18,8 @@ back the original files byte for byte.
 
 The patch that shows the Download button ("Download fix", below) was added after that, and was seen working inside
 the app on 2.0.0 the same day: the button showed, and its Windows Save dialog saved the PDF where it was told to.
-The redo fix ("Redo fix", below) was added after that too. Its test passes on copies of all three versions; it has
-not yet been seen inside the app.
+The redo fix ("Redo fix", below) was added after that too, and was seen working inside the app on 2.0.0 the same
+evening: Ctrl+Z undid and Ctrl+Shift+Z redid, with Caps Lock on as well.
 
 npm's `@modelcontextprotocol/server-pdf` 2.0.1, 2.0.2 and 2.0.3 ship 2.0.0's viewer file byte for byte, every patch finds its anchor in them, and they still have the bug below.
 
@@ -206,8 +206,8 @@ old server process.
 The viewer undoes an annotation edit with Ctrl+Z and redoes it with Ctrl+Shift+Z; it has no undo or redo buttons.
 Its keyboard handler checks that the key pressed is `z`, but with Shift held the browser reports the key as `Z`, so
 Ctrl+Shift+Z never reached the redo (seen in the app on 2.0.0, 2026-10-19: Ctrl+Z undid, Ctrl+Shift+Z did nothing). The
-fix accepts `z` and `Z` and leaves Shift to choose between undo and redo, as the viewer already did. The same check
-is in 1.7.4 and 1.7.5. The app's own Edit menu does not take Ctrl+Shift+Z on Windows: its Redo there is Ctrl+Y (read
+fix accepts `z` and `Z` and leaves Shift to choose between undo and redo, as the viewer already did; with it, both
+shortcuts work in the app on 2.0.0, with Caps Lock on or off (2026-10-19). The same check is in 1.7.4 and 1.7.5. The app's own Edit menu does not take Ctrl+Shift+Z on Windows: its Redo there is Ctrl+Y (read
 in desktop app 2.42304.0.0's code).
 
 ### Schema-dialect fix (1.7.4 and 1.7.5)
@@ -331,7 +331,7 @@ So every script now requires, besides `dist\index.js`:
 |---|---|
 | `manifest.json` | the app reads it to start the server at all |
 | `dist\server.js` | the real server imports it, and the wrapper imports it first |
-| `dist\mcp-app.html` | the server serves it as the viewer panel, and four patches live in it |
+| `dist\mcp-app.html` | the server serves it as the viewer panel, and six patches live in it |
 | `dist\pdfjs-polyfill.js` | `server.js` imports it |
 | `node_modules\pdfjs-dist\legacy\build\pdf.mjs` | `server.js` imports it |
 
