@@ -1,0 +1,5 @@
+# Written by the toolkit while it runs; they hold the machine's own files and logs.
+backups/
+pdf-read.log
+pdf-read.log.old
+DIAG-ON.flag
