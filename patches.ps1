@@ -57,6 +57,17 @@ $PATCHES = @(
         )
     },
     [pscustomobject]@{
+        Key = 'dlshow'; Name = 'download fix (button shown)'; File = 'mcp-app.html'; Marker = 'PDF-LOCAL-READ-DLSHOW'
+        Variants = @(
+            @{ Bundle = '1.7.4'; Orig = 'Jn.style.display=(s=eI.getHostCapabilities())!=null&&s.downloadFile?"":"none"'
+               New  = 'Jn.style.display=(s=eI.getHostCapabilities(),"")/*PDF-LOCAL-READ-DLSHOW: the download fix needs no download support from the app*/' },
+            @{ Bundle = '1.7.5'; Orig = 'Ln.style.display=(s=eI.getHostCapabilities())!=null&&s.downloadFile?"":"none"'
+               New  = 'Ln.style.display=(s=eI.getHostCapabilities(),"")/*PDF-LOCAL-READ-DLSHOW: the download fix needs no download support from the app*/' },
+            @{ Bundle = '2.0.0 to 2.0.3'; Orig = 'J0.style.display=(l=tI.getHostCapabilities())!=null&&l.downloadFile?"":"none"'
+               New  = 'J0.style.display=(l=tI.getHostCapabilities(),"")/*PDF-LOCAL-READ-DLSHOW: the download fix needs no download support from the app*/' }
+        )
+    },
+    [pscustomobject]@{
         Key = 'restore'; Name = 'transcript-restore fix'; File = 'mcp-app.html'; Marker = 'PDF-LOCAL-READ-RESTOREFIX'
         Variants = @(
             @{ Bundle = '1.7.4, 1.7.5'; Orig = 'function E7(i){return i.structuredContent}'

@@ -165,6 +165,9 @@ foreach ($pt in $PATCHES) {
 if (($patchState['dlwidget'] -eq 'PATCHED') -ne ($patchState['dlserver'] -eq 'PATCHED')) {
     Write-Host "Download fix   : MISMATCH - widget=$($patchState['dlwidget']) server=$($patchState['dlserver']) (half-applied; the button is broken). Run install-pdf-read.ps1 (app closed)." -ForegroundColor Red
 }
+if ($patchState['dlshow'] -eq 'PATCHED' -and -not ($patchState['dlwidget'] -eq 'PATCHED' -and $patchState['dlserver'] -eq 'PATCHED')) {
+    Write-Host "Download button: SHOWN WITHOUT THE FIX - widget=$($patchState['dlwidget']) server=$($patchState['dlserver']) (a click does nothing). Run install-pdf-read.ps1 (app closed); if a half has no known anchor, uninstall-pdf-read.ps1 hides the button again." -ForegroundColor Red
+}
 $schemaState = switch ($patchState['schema']) { 'PATCHED' { 'PATCHED' } 'PATCHABLE' { 'NOT PATCHED' } 'NOTNEEDED' { 'NOT NEEDED' } default { 'UNKNOWN' } }
 
 # The live test of the same thing: ask the installed server for its tool list and put every output schema

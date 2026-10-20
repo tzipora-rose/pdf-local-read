@@ -5,7 +5,8 @@
 #   wrap  pdf-stdio-wrap.js    -> dist\index.js        (the app now launches the wrapper)
 #   link  dist\pdf-local-read.json: this toolkit's folder, where the wrapper finds its DIAG flag and log folder, and
 #         the folders it grants read access to (-Directories)
-#   patches (README - "The patches"): poll-loop v1 and v2, the Download button (two halves), transcript restore,
+#   patches (README - "The patches"): poll-loop v1 and v2, the Download button (two halves, and the button shown
+#         where the app would hide it), transcript restore,
 #         the schema dialect (1.7.4 and 1.7.5; 2.0.0 already has it), Windows file:// roots, and the list walk that
 #         skips whole drives.
 # Originals are backed up to backups\ with their SHA-256 before the first patch of each bundle version.
@@ -152,7 +153,11 @@ $states = @(foreach ($pt in $PATCHES) { [pscustomobject]@{ Patch = $pt; State = 
 $dlw = $states | Where-Object { $_.Patch.Key -eq 'dlwidget' }; $dls = $states | Where-Object { $_.Patch.Key -eq 'dlserver' }
 $dlHeld = $false
 if (($dlw.State.State -eq 'UNKNOWN' -and $dls.State.State -eq 'PATCHABLE') -or ($dls.State.State -eq 'UNKNOWN' -and $dlw.State.State -eq 'PATCHABLE')) { $dlHeld = $true }
-$toApply = @($states | Where-Object { $_.State.State -eq 'PATCHABLE' -and -not ($dlHeld -and ($_.Patch.Key -in 'dlwidget', 'dlserver')) })
+# The button is shown only with both halves in place: shown without them, a click does nothing.
+$dlShow = $states | Where-Object { $_.Patch.Key -eq 'dlshow' }
+$pairIn = @('PATCHED', 'PATCHABLE')
+$showHeld = ($dlShow.State.State -eq 'PATCHABLE') -and ($dlHeld -or ($dlw.State.State -notin $pairIn) -or ($dls.State.State -notin $pairIn))
+$toApply = @($states | Where-Object { $_.State.State -eq 'PATCHABLE' -and -not ($dlHeld -and ($_.Patch.Key -in 'dlwidget', 'dlserver')) -and -not ($showHeld -and $_.Patch.Key -eq 'dlshow') })
 
 if ($idxIsWrapper -and -not $realExists) {
     Write-Host "HALF-INSTALLED: index.js is our wrapper but index.real.js is MISSING." -ForegroundColor Red
@@ -177,6 +182,7 @@ if (-not $needWrapper -and -not $needLink -and $toApply.Count -eq 0) {
     Write-Host "  toolkit link: $linkToolkit" -ForegroundColor Green
     Show-States
     if ($dlHeld) { Write-Host "  download fix: held back - one half has no known anchor in this bundle, and one half alone breaks the button" -ForegroundColor Yellow }
+    if ($showHeld) { Write-Host "  download button: left as the app decides - the download fix is not in place, and the button shown without it does nothing" -ForegroundColor Yellow }
     Write-Host "To refresh the wrapper code, run uninstall-pdf-read.ps1 then install again." -ForegroundColor DarkGray
     return
 }
@@ -263,6 +269,7 @@ try {
         elseif ($s.State.State -eq 'NOTNEEDED') { Write-Host "  $($s.Patch.Name): not needed on this version (the bundle already has the fix)." -ForegroundColor DarkGray }
     }
     if ($dlHeld) { Write-Host "  download fix held back: one half has no known anchor in this bundle, and one half alone breaks the button." -ForegroundColor Yellow }
+    if ($showHeld) { Write-Host "  download button left as the app decides: the download fix is not in place, and the button shown without it does nothing." -ForegroundColor Yellow }
 }
 finally {
     if ($wasFrozen) {

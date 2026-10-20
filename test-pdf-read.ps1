@@ -7,8 +7,9 @@
 # runs it unstubbed. It also starts the installed wrapper under node against a
 # copy, calls the patched server's fileUrlToPath, speaks MCP to the wrapped server as a client that sends it roots,
 # calls list_pdfs with a whole drive allowed (every read of the drive's root intercepted, so the disk is never walked),
-# and builds copies missing the extension's own files, which every script must refuse. The source extension and this
-# toolkit are hashed before and after.
+# and builds copies missing the extension's own files, which every script must refuse. It also checks that the
+# Download button is shown only together with the download fix. The source extension and this toolkit are hashed
+# before and after.
 #
 #   test-pdf-read.ps1                  work folder: %TEMP%\pdf-local-read-test
 #   -WorkDir <folder>                  another work folder: a new one, or one this script made before
@@ -501,6 +502,24 @@ try {
     $o = Run (S 'uninstall-pdf-read.ps1')
     Check '1.5 uninstall: prints the dist before writing' (Has $o "Extension dist: $LD  (from the app's extension folder)")
     Check '1.5 uninstall: pristine again, link removed, freeze removed' ((Test-Pristine $LD) -and (Has $o "Removed the wrapper's toolkit link") -and ((Get-DenyCount $LE) -eq 0))
+    $dlw = $PATCHES | Where-Object { $_.Key -eq 'dlwidget' }; $dlsh = $PATCHES | Where-Object { $_.Key -eq 'dlshow' }
+    if (@($EXPECT | Where-Object { $_.Key -in 'dlwidget', 'dlshow' }).Count -eq 2) {
+        $appPath = Join-Path $LD 'mcp-app.html'
+        $appText = $latin1.GetString([System.IO.File]::ReadAllBytes($appPath))
+        $wv = (Get-PatchState $dlw $appText).Variant
+        [System.IO.File]::WriteAllBytes($appPath, $latin1.GetBytes($appText.Replace($wv.Orig, $wv.Orig.Replace('downloadFile){', 'downloadFile) {'))))
+        $o = Run (S 'install-pdf-read.ps1')
+        $after = $latin1.GetString([System.IO.File]::ReadAllBytes($appPath))
+        Check '1.6 install with the widget half of the download fix unanchored: the fix held back, the button left as the app decides' ((Has $o 'download fix held back') -and (Has $o 'download button left as the app decides') -and -not $after.Contains($dlw.Marker) -and -not $after.Contains($dlsh.Marker))
+        $o = Run (S 'uninstall-pdf-read.ps1')
+        Set-Pristine $LD
+        $sv = (Get-PatchState $dlsh $appText).Variant
+        [System.IO.File]::WriteAllBytes($appPath, $latin1.GetBytes($appText.Replace($sv.Orig, $sv.New)))
+        $o = Run (S 'verify-pdf-read.ps1')
+        Check '1.7 verify with the button shown but no download fix: says so' (Has $o 'Download button: SHOWN WITHOUT THE FIX')
+        Set-Pristine $LD
+        Check '1.7 the copy is pristine again' (Test-Pristine $LD)
+    }
 
     Write-Host "== 2 -Dist and PDF_VIEWER_DIST (a short-path copy with node_modules)"
     $L1 = Get-Snap $LE

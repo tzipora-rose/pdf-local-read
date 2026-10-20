@@ -14,15 +14,17 @@ back the original files byte for byte.
 |---|---|---|---|
 | Every patch has a known anchor (the exact text it replaces) | yes | yes | yes (the schema patch is built in) |
 | `test-pdf-read.ps1` passes on a copy | yes | yes | yes |
-| Seen working inside the app | yes, with this toolkit's earlier version | not yet | not yet |
+| Seen working inside the app | yes, 2026-10-19 (desktop app 2.42304.0.0) | yes, 2026-10-19 | yes, 2026-10-19 |
+
+The patch that shows the Download button ("Download fix", below) was added after that, and has not been seen inside
+the app yet.
 
 npm's `@modelcontextprotocol/server-pdf` 2.0.1, 2.0.2 and 2.0.3 ship 2.0.0's viewer file byte for byte, every patch finds its anchor in them, and they still have the bug below.
 
-**Known limit: the model's `interact` tool.** In the app's Code tab, `interact` (which carries `get_text`,
-`get_screenshot`, `save_as` and the rest) fails with `Viewer never connected ... (no poll within 8s)` on 1.7.4, and
-2.0.0's code for it is the same. Listing and opening PDFs work, and the viewer panel shows the document. The cause is
-being investigated. Meanwhile, the Code tab's own `read_widget_context` tool has returned the text and an image of
-the page a viewer is showing.
+**The model's `interact` tool** (which carries `get_text`, `get_screenshot`, `save_as` and the rest) works inside the
+app's Code tab on all three versions as of 2026-10-19. It had failed there on 2026-09-26 and 2026-10-14 with
+`Viewer never connected ... (no poll within 8s)`; both the app and this toolkit have changed since, and which change
+fixed it has not been established.
 
 ## Use
 
@@ -132,14 +134,16 @@ patched file from an unpatched one.
 | poll-loop fix | `mcp-app.html` | applied | applied | applied | one failed poll stops the viewer's command loop for good |
 | poll-loop fix v2 (hang timeout) | `mcp-app.html` | applied | applied | applied | a poll that never returns hangs the loop for good |
 | download fix (widget) and (server dialog) | both | applied | applied | applied | the viewer's Download button did nothing |
+| download fix (button shown) | `mcp-app.html` | applied | applied | applied | the viewer hides its Download button unless the app reports download support, which desktop app 2.42304.0.0 does not |
 | transcript-restore fix | `mcp-app.html` | applied | applied | applied | after an app restart, viewers in a chat show "Invalid tool result" |
 | schema-dialect fix | `server.js` | applied | applied | not needed | Claude Code 2.1.275 and later refuse to call `display_pdf` |
 
 - **Install** applies every patch whose anchor it finds, after saving each original file to `backups\` with its
   SHA-256 (a fingerprint of its exact bytes). A patch with no known anchor (a new version of pdf-viewer) is skipped
-  with a warning, never guessed at. The Download fix's two halves go in together or not at all.
-- **Verify** reports each patch as PATCHED, NOT PATCHED, NOT NEEDED or UNKNOWN PATTERN, and a Download fix with only
-  one half in place as MISMATCH.
+  with a warning, never guessed at. The Download fix's two halves go in together or not at all, and the button is
+  shown only with both in place.
+- **Verify** reports each patch as PATCHED, NOT PATCHED, NOT NEEDED or UNKNOWN PATTERN, a Download fix with only
+  one half in place as MISMATCH, and a Download button shown without the fix.
 - **Uninstall** reverts each patch by the exact inverse replacement, and leaves a file untouched if a marker remains
   after that.
 - The server reads its files once per start, so every patch takes effect at the next app start.
@@ -166,16 +170,25 @@ seconds and polls again, since one that never returns would hang the loop the sa
 
 The viewer's Download button hands the PDF to the host through `ui/download-file`, which earlier app builds left
 unimplemented (the app logged `download-file not yet wired`), so the click did nothing. The panel runs in a sandboxed
-frame from another origin, where the browser's own save routes throw. The fix has two halves:
+frame from another origin, where the browser's own save routes throw. The fix has two halves, and a third patch that
+shows the button:
 
 - **Widget** (`mcp-app.html`): the button calls the server's own `save_pdf` tool with the PDF and a reserved name,
   `::DOWNLOAD-DIALOG::<file name>`.
 - **Server** (`server.js`): `save_pdf` recognizes that name, shows the Windows Save dialog (through PowerShell, on
   top, starting in Downloads), writes the PDF where you choose and returns the path. Cancel returns
   `Download cancelled`. The dialog runs alongside the server, so polls keep being answered while it is open.
+- **The button shown** (`mcp-app.html`): the viewer shows its Download button only when the app reports download
+  support (`downloadFile` among its host capabilities). Desktop app 2.42304.0.0 does not, so 1.7.4, 1.7.5 and 2.0.0
+  all hide the button there (read in their code, and seen in the app on 2026-10-19). The patch shows it whenever the
+  two halves are in, since they need nothing from the app.
 
-Newer app builds have a route for `ui/download-file`; whether the host now completes a download itself has not been
-tested. The fix does not depend on it.
+Newer app builds have a route for `ui/download-file`, but 2.42304.0.0 does not report the capability to the viewer;
+whether a host that does completes a download itself has not been tested. The fix does not depend on it.
+
+The viewer's Save button is a different thing: it appears once the open PDF has an unsaved change, asks "Overwrite
+this file with your annotations and form edits?", and writes over the open file. Download is the one that asks where
+to save.
 
 ### Transcript-restore fix
 
