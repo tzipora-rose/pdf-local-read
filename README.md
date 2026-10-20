@@ -16,8 +16,8 @@ back the original files byte for byte.
 | `test-pdf-read.ps1` passes on a copy | yes | yes | yes |
 | Seen working inside the app | yes, 2026-10-19 (desktop app 2.42304.0.0) | yes, 2026-10-19 | yes, 2026-10-19 |
 
-The patch that shows the Download button ("Download fix", below) was added after that, and has not been seen inside
-the app yet.
+The patch that shows the Download button ("Download fix", below) was added after that, and was seen working inside
+the app on 2.0.0 the same day: the button showed, and its Windows Save dialog saved the PDF where it was told to.
 
 npm's `@modelcontextprotocol/server-pdf` 2.0.1, 2.0.2 and 2.0.3 ship 2.0.0's viewer file byte for byte, every patch finds its anchor in them, and they still have the bug below.
 
