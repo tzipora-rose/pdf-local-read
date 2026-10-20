@@ -18,6 +18,8 @@ back the original files byte for byte.
 
 The patch that shows the Download button ("Download fix", below) was added after that, and was seen working inside
 the app on 2.0.0 the same day: the button showed, and its Windows Save dialog saved the PDF where it was told to.
+The redo fix ("Redo fix", below) was added after that too. Its test passes on copies of all three versions; it has
+not yet been seen inside the app.
 
 npm's `@modelcontextprotocol/server-pdf` 2.0.1, 2.0.2 and 2.0.3 ship 2.0.0's viewer file byte for byte, every patch finds its anchor in them, and they still have the bug below.
 
@@ -136,6 +138,7 @@ patched file from an unpatched one.
 | download fix (widget) and (server dialog) | both | applied | applied | applied | the viewer's Download button did nothing |
 | download fix (button shown) | `mcp-app.html` | applied | applied | applied | the viewer hides its Download button unless the app reports download support, which desktop app 2.42304.0.0 does not |
 | transcript-restore fix | `mcp-app.html` | applied | applied | applied | after an app restart, viewers in a chat show "Invalid tool result" |
+| redo fix (Ctrl+Shift+Z) | `mcp-app.html` | applied | applied | applied | Ctrl+Shift+Z never redoes what Ctrl+Z undid |
 | schema-dialect fix | `server.js` | applied | applied | not needed | Claude Code 2.1.275 and later refuse to call `display_pdf` |
 
 - **Install** applies every patch whose anchor it finds, after saving each original file to `backups\` with its
@@ -197,6 +200,15 @@ content. The viewer read only the structured data, found nothing, and showed "In
 JSON text when the structured data is missing. The restored viewer works as a local viewer: the PDF reloads from its
 path, and scrolling, search and Download work. It is not reconnected to the model: its old viewer ID ended with the
 old server process.
+
+### Redo fix
+
+The viewer undoes an annotation edit with Ctrl+Z and redoes it with Ctrl+Shift+Z; it has no undo or redo buttons.
+Its keyboard handler checks that the key pressed is `z`, but with Shift held the browser reports the key as `Z`, so
+Ctrl+Shift+Z never reached the redo (seen in the app on 2.0.0, 2026-10-19: Ctrl+Z undid, Ctrl+Shift+Z did nothing). The
+fix accepts `z` and `Z` and leaves Shift to choose between undo and redo, as the viewer already did. The same check
+is in 1.7.4 and 1.7.5. The app's own Edit menu does not take Ctrl+Shift+Z on Windows: its Redo there is Ctrl+Y (read
+in desktop app 2.42304.0.0's code).
 
 ### Schema-dialect fix (1.7.4 and 1.7.5)
 

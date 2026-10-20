@@ -77,6 +77,15 @@ $PATCHES = @(
         )
     },
     [pscustomobject]@{
+        Key = 'redo'; Name = 'redo fix (Ctrl+Shift+Z)'; File = 'mcp-app.html'; Marker = 'PDF-LOCAL-READ-REDOFIX'
+        Variants = @(
+            @{ Bundle = '1.7.4, 1.7.5'; Orig = '(i.ctrlKey||i.metaKey)&&i.key==="z"){if(document.activeElement instanceof HTMLInputElement||document.activeElement instanceof HTMLTextAreaElement)return;i.preventDefault(),i.shiftKey?u7():h7();'
+               New  = '(i.ctrlKey||i.metaKey)&&(i.key==="z"||i.key==="Z")/*PDF-LOCAL-READ-REDOFIX: with Shift held the key is "Z"*/){if(document.activeElement instanceof HTMLInputElement||document.activeElement instanceof HTMLTextAreaElement)return;i.preventDefault(),i.shiftKey?u7():h7();' },
+            @{ Bundle = '2.0.0 to 2.0.3'; Orig = '(A.ctrlKey||A.metaKey)&&A.key==="z"){if(document.activeElement instanceof HTMLInputElement||document.activeElement instanceof HTMLTextAreaElement)return;A.preventDefault(),A.shiftKey?iE():AE();'
+               New  = '(A.ctrlKey||A.metaKey)&&(A.key==="z"||A.key==="Z")/*PDF-LOCAL-READ-REDOFIX: with Shift held the key is "Z"*/){if(document.activeElement instanceof HTMLInputElement||document.activeElement instanceof HTMLTextAreaElement)return;A.preventDefault(),A.shiftKey?iE():AE();' }
+        )
+    },
+    [pscustomobject]@{
         Key = 'dlserver'; Name = 'download fix (server dialog)'; File = 'server.js'; Marker = '::DOWNLOAD-DIALOG::'
         Variants = @(
             @{ Bundle = '1.7.4 to 2.0.3'; Orig = $DLG_ANCHOR; New = $DLG_ANCHOR + $DLG_INS }

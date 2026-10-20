@@ -6,7 +6,7 @@
 #   link  dist\pdf-local-read.json: this toolkit's folder, where the wrapper finds its DIAG flag and log folder, and
 #         the folders it grants read access to (-Directories)
 #   patches (README - "The patches"): poll-loop v1 and v2, the Download button (two halves, and the button shown
-#         where the app would hide it), transcript restore,
+#         where the app would hide it), transcript restore, the redo shortcut (Ctrl+Shift+Z),
 #         the schema dialect (1.7.4 and 1.7.5; 2.0.0 already has it), Windows file:// roots, and the list walk that
 #         skips whole drives.
 # Originals are backed up to backups\ with their SHA-256 before the first patch of each bundle version.
