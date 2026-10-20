@@ -12,8 +12,9 @@ back the original files byte for byte.
 
 A recording made in the Claude desktop app on 2026-10-19, with pdf-viewer 2.0.0 and this toolkit installed: Claude
 opens a PDF from a local folder, the viewer's Download button opens the Windows Save As dialog, and Claude highlights
-two lines when asked. 29 seconds, no sound; the Save As dialog's folder list is painted over. The recording is also
-in this repository, `media\demo.mp4`.
+two lines when asked. 29 seconds, no sound; the Save As dialog's folder list is painted over. It also shows the
+signature dragged up the page and back: pdf-viewer keeps a move like that on screen only ("Known limitations"). The
+recording is also in this repository, `media\demo.mp4`.
 
 https://github.com/user-attachments/assets/0c28f49a-79ef-4cb6-a3de-5d5f95ec8d35
 
@@ -32,6 +33,14 @@ button on its toolbar is there because of the toolkit: without it, the viewer hi
 Claude has highlighted them in the open viewer through `interact`. The `*` before the file's path, and the Save
 button, which appears only after an unsaved change, show that the highlights are not in the file yet; Save writes them
 into it.
+
+## Known limitations
+
+**A moved annotation that came from the PDF is not kept.** pdf-viewer lets you drag an annotation that is already in
+the file, such as the signature in the recording, but it keeps the move on screen only: Save and Download write the
+annotation where the file has it, Revert leaves it where it was dragged, and the move is lost when the viewer reloads
+(in Claude Desktop, when the chat is scrolled far away from it). pdf-viewer's own code calls the move "UI-only". This
+toolkit does not change that; it is reported to ext-apps: https://github.com/modelcontextprotocol/ext-apps/issues/817
 
 ## Status
 
