@@ -1,3 +1,21 @@
+# Copyright (C) 2026 tzipora-rose
+#
+# This file is part of pdf-local-read.
+#
+# pdf-local-read is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License, version 3, as published by
+# the Free Software Foundation.
+#
+# pdf-local-read is distributed in the hope that it will be useful, but WITHOUT ANY
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for
+# more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with pdf-local-read. If not, see <https://www.gnu.org/licenses/>.
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 # test-pdf-read.ps1
 # End-to-end test of this toolkit that never touches the live extension. It copies the installed pdf-viewer
 # extension (or the one -Dist names) and this toolkit into a work folder, then runs the real install / verify /

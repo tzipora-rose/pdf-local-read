@@ -1,3 +1,28 @@
+# Copyright (C) 2026 tzipora-rose
+# Copyright (C) 2024-2025 Model Context Protocol a Series of LF Projects, LLC
+#
+# This file is part of pdf-local-read.
+#
+# pdf-local-read is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License, version 3, as published by
+# the Free Software Foundation.
+#
+# pdf-local-read is distributed in the hope that it will be useful, but WITHOUT ANY
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for
+# more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with pdf-local-read. If not, see <https://www.gnu.org/licenses/>.
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
+# Quoted code. Each Orig text below, and the part of its New text that repeats it, is pdf-viewer's own code, quoted
+# so that the patch can find its place: from ext-apps' examples/pdf-server
+# (https://github.com/modelcontextprotocol/ext-apps), and for the schema patch from the MCP TypeScript SDK that
+# pdf-viewer's server.js bundles. That code is under the MIT License and the Apache License 2.0, as the two
+# projects' license file sets out; it is copied, as published, in third-party\modelcontextprotocol\LICENSE.
+
 # patches.ps1 - every patch the toolkit applies to the pdf-viewer extension, in one table.
 # Dot-sourced by install-pdf-read.ps1, verify-pdf-read.ps1, uninstall-pdf-read.ps1 and test-pdf-read.ps1, so an
 # anchor is written once. Pure ASCII: Windows PowerShell 5.1 reads a .ps1 file as Windows-1252.

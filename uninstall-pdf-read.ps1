@@ -1,3 +1,21 @@
+# Copyright (C) 2026 tzipora-rose
+#
+# This file is part of pdf-local-read.
+#
+# pdf-local-read is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License, version 3, as published by
+# the Free Software Foundation.
+#
+# pdf-local-read is distributed in the hope that it will be useful, but WITHOUT ANY
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for
+# more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with pdf-local-read. If not, see <https://www.gnu.org/licenses/>.
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 # uninstall-pdf-read.ps1
 # Reverses install-pdf-read.ps1: restores dist\index.real.js -> dist\index.js, removes the wrapper and its link
 # (dist\pdf-local-read.json), and reverts every patch of patches.ps1 by exact inverse. It refuses an extension folder

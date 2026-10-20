@@ -2,11 +2,36 @@
 
 Lets Claude open PDFs from your own folders on Windows, through the Claude desktop app's built-in **pdf-viewer**
 extension: `list_pdfs` lists them, `display_pdf` opens one in the viewer panel. Without it, pdf-viewer on Windows
-refuses every local file. The toolkit also fixes four defects of the viewer panel and one that stops Claude Code from
+refuses every local file. The toolkit also fixes six defects of the viewer panel and one that stops Claude Code from
 opening the viewer at all, and keeps `list_pdfs` from crawling a whole drive.
 
 It patches the extension the app installed, in place, and every change is reversible: `uninstall-pdf-read.ps1` puts
 back the original files byte for byte.
+
+## What it looks like
+
+A recording made in the Claude desktop app on 2026-10-19, with pdf-viewer 2.0.0 and this toolkit installed: Claude
+opens a PDF from a local folder, the viewer's Download button opens the Windows Save As dialog, and Claude highlights
+two lines when asked. 29 seconds, no sound; the Save As dialog's folder list is painted over. The recording is also
+in this repository, `media\demo.mp4`.
+
+https://github.com/user-attachments/assets/0c28f49a-79ef-4cb6-a3de-5d5f95ec8d35
+
+![The viewer in the chat, showing a PDF opened from a folder on the C: drive](media/1-opened-in-the-chat.png)
+
+**Opened from a local folder.** `display_pdf` shows a PDF from a folder on the C: drive in the chat. The Download
+button on its toolbar is there because of the toolkit: without it, the viewer hides the button in this app.
+
+![The Windows Save As dialog over the viewer](media/2-download.png)
+
+**Download.** The button opens the Windows Save As dialog, to save the PDF where you choose.
+
+![The two lines highlighted in the viewer, above the chat message that asked for them](media/3-asked-and-highlighted.png)
+
+**Asked in words.** The message at the bottom asks for two lines to be highlighted, each in its own color; above it,
+Claude has highlighted them in the open viewer through `interact`. The `*` before the file's path, and the Save
+button, which appears only after an unsaved change, show that the highlights are not in the file yet; Save writes them
+into it.
 
 ## Status
 
@@ -253,6 +278,9 @@ FAIL, 2 = could not run; the last line printed is the verdict. Its model of the 
 | `check-schema-dialect.mjs` | The schema-dialect check (above). |
 | `uninstall-pdf-read.ps1` | Puts back the original extension and removes the freeze. App closed. Refuses an incomplete extension folder. |
 | `test-pdf-read.ps1` | Tests the whole toolkit on copies, never on the installed extension ("Testing the toolkit"). |
+| `LICENSE` | The GNU Affero General Public License, version 3 ("License"). |
+| `third-party\` | The license of the code `patches.ps1` and `check-schema-dialect.mjs` quote ("Third-party code"). |
+| `media\` | The recording and the pictures in this README ("What it looks like"), under CC BY-SA 4.0 ("License"). |
 | `backups\` | The original files, saved by the installer before its first patch of each version. |
 | `pdf-read.log` | The wrapper's log, written while the app runs (size-capped). |
 
@@ -404,3 +432,22 @@ The app can stay open. It needs Node.js on PATH and takes a few minutes, and pri
 Exit 0 = every check passed and the work folder is removed; 1 = a check failed and the work folder is kept for
 inspection; 2 = it could not run. Run it after any change to the toolkit, and, with `-Dist`, on a new version of
 pdf-viewer before installing on it (the test works on copies).
+
+## License
+
+Copyright (C) 2026 tzipora-rose
+
+pdf-local-read is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License, version 3, as published by the Free Software Foundation. See `LICENSE`.
+
+The recording and the pictures in `media\`, with the drawings in them, are licensed under the Creative Commons
+Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0): https://creativecommons.org/licenses/by-sa/4.0/. The
+Claude app's interface, which they show, is Anthropic's.
+
+## Third-party code
+
+`patches.ps1` quotes short pieces of pdf-viewer's own code: the text each patch finds, and the parts of its
+replacement that repeat it. They come from ext-apps' `examples/pdf-server`, and the schema patch's from the MCP
+TypeScript SDK that pdf-viewer's `server.js` bundles. `check-schema-dialect.mjs` repeats short pieces of that SDK's
+JSON Schema validator. Both projects are under the MIT License and the Apache License 2.0, as their license file sets
+out; it is copied, as published, in `third-party\modelcontextprotocol\LICENSE`. The notice at the top of those two
+files names the projects' holder, Model Context Protocol a Series of LF Projects, LLC, beside this project's own.

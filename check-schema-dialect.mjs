@@ -1,3 +1,22 @@
+// Copyright (C) 2026 tzipora-rose
+// Copyright (C) 2024-2025 Model Context Protocol a Series of LF Projects, LLC
+//
+// This file is part of pdf-local-read.
+//
+// pdf-local-read is free software: you can redistribute it and/or modify it under the
+// terms of the GNU Affero General Public License, version 3, as published by
+// the Free Software Foundation.
+//
+// pdf-local-read is distributed in the hope that it will be useful, but WITHOUT ANY
+// WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+// FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for
+// more details.
+//
+// You should have received a copy of the GNU Affero General Public License
+// along with pdf-local-read. If not, see <https://www.gnu.org/licenses/>.
+//
+// SPDX-License-Identifier: AGPL-3.0-only
+
 // check-schema-dialect.mjs   [ marker: PDF-LOCAL-READ-SCHEMACHECK ]
 //
 // Builds the INSTALLED pdf-viewer server in this process, asks it for its tool list over the MCP
@@ -11,6 +30,11 @@
 // The gate model is Claude Code 2.1.281's (its bundled MCP SDK's default AjvJsonSchemaValidator,
 // which refuses any schema whose $schema is not JSON Schema 2020-12). It proves only what it was
 // transcribed from: if a later Claude Code changes that gate, re-read the gate from the new code.
+//
+// Quoted code: DIALECTS_2020 and the test of $schema in makeGate, the options both Ajv instances are made with,
+// and the lookup of a schema by its $id repeat the MCP TypeScript SDK's AjvJsonSchemaValidator. The SDK's code is
+// under the MIT License and the Apache License 2.0, as its license file sets out; a copy, as published, is in
+// third-party/modelcontextprotocol/LICENSE.
 
 import fs from 'node:fs';
 import path from 'node:path';

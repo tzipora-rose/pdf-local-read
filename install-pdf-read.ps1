@@ -1,3 +1,21 @@
+# Copyright (C) 2026 tzipora-rose
+#
+# This file is part of pdf-local-read.
+#
+# pdf-local-read is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License, version 3, as published by
+# the Free Software Foundation.
+#
+# pdf-local-read is distributed in the hope that it will be useful, but WITHOUT ANY
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for
+# more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with pdf-local-read. If not, see <https://www.gnu.org/licenses/>.
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 # install-pdf-read.ps1
 # Installs the local-PDF-read wrapper into the Claude desktop app's pdf-viewer extension, applies the patches listed
 # in patches.ps1 to dist\mcp-app.html and dist\server.js, then runs verify-pdf-read.ps1 as a health check.
